@@ -1,0 +1,117 @@
+<div class="container-fluid" *ngIf="showScreen">
+
+  <div *ngIf="showScreen">
+    <div class="container">
+  
+      <img [src]="currentUserImage" alt="Avatar" *ngIf="currentUserImage" class="avatar">
+      <h2 class="username"> {{ currentUserName }}</h2>
+      <button class="btn btn-exit animated-button" (click)="logout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-4">
+      <div class="user-list-card">
+        <div class="user-card"
+             [ngClass]="{ 'active': user?.phone === selectedUser?.phone }"
+             *ngFor="let user of userList"
+             
+             (click)="selectUserHandler(user?.phone)"
+        >
+
+        
+          <img [src]="user?.image"
+               [alt]="user?.name"
+               class="avatar"
+          />
+          <p class="username">{{user?.name}}</p>
+          <div class="new-message-count" *ngIf="newMessageCount[user?.name] > 0">{{ newMessageCount[user?.name] }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="chat-container">
+        <ng-container *ngIf="selectedUser">
+          <div class="chat-header">
+            
+            <img [src]="selectedUser?.image"
+                 [alt]="selectedUser?.name"
+                 class="avatar"
+            />
+            <p class="username">{{selectedUser?.name}}</p>
+          </div>
+
+          <div class="chat-body">
+            <div *ngFor="let item of messageArray"
+                 [ngClass]="{ 'same-user': item?.user === currentUser?.name }"
+            >
+              <p class="message-container">{{item?.message}}</p>
+              <div class="message-timestamp-container">
+                <span class="message-timestamp">{{ getTimeStamp() }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-footer">
+            <div class="row">
+              <div class="col-md-10">
+                <div class="form-group mb-0">
+                  <input type="text"
+                         placeholder="Escribe tu mensaje"
+                         class="form-control"
+                         [(ngModel)]="messageText"
+                         (keyup)="$event.keyCode === 13 && sendMessage()"
+                  />
+                </div>
+              </div>
+              <div class="col-md-2 text-center align-self-center">
+                <button class="btn btn-primary btn-sm px-3"
+                        (click)="sendMessage()">Enviar
+                </button>
+                
+              </div>
+            </div>
+          </div>
+        
+        </ng-container>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<ng-template #popup let-d="dismiss">
+
+  <div class="container-login100">
+    <div class="wrap-login100">
+      <div class="login100-pic js-tilt" data-tilt>
+        <img src="./assets/img-01.png" alt="IMG" style="width: 200px; height: auto;">
+      </div>
+
+      <form class="login100-form validate-form">
+        <span class="login100-form-title">
+          Iniciar Sesion
+        </span>
+
+        <div class="wrap-input100 validate-input" data-validate="Valid phone number is required">
+          <input class="input100" type="text" name="phone" placeholder="Phone Number" [(ngModel)]="phone">
+          <span class="focus-input100"></span>
+          <span class="symbol-input100">
+            <i class="fa fa-phone" aria-hidden="true"></i>
+          </span>
+        </div>
+
+        <div class="container-login100-form-btn">
+          <button class="login100-form-btn" (click)="login(d)">
+            Login
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</ng-template>
